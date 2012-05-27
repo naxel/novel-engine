@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Saya no Uta &mdash; NovelEngine</title>
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<div id="canvas" onclick="next();"></div>
+<div class="menu">
+    <button id="newGame">New</button>
+
+    <button id="save">Save</button>
+    <label for="save">&#x25bc;
+        <ul>
+            <li title="Slot 1"><input onclick="saveGame(0);" id="saveSlot1" type="radio" name="action" value="" hidden
+                                      checked/><label for="saveSlot1">Slot 1</label></li>
+            <li title="Slot 2"><input onclick="saveGame(1);" id="saveSlot2" type="radio" name="action" value="" hidden/><label
+                    for="saveSlot2">Slot 2</label></li>
+            <li title="Slot 3"><input onclick="saveGame(2);" id="saveSlot3" type="radio" name="action" value="" hidden/><label
+                    for="saveSlot3">Slot 3</label></li>
+        </ul>
+    </label>
+    <button id="load">Load</button>
+    <label for="load">&#x25bc;
+        <ul>
+            <li title="Slot 1"><input onclick="loadGame(0);" id="loadSlot1" type="radio" name="action" value="" hidden
+                                      checked/><label for="loadSlot1">Slot 1</label></li>
+            <li title="Slot 2"><input onclick="loadGame(1);" id="loadSlot2" type="radio" name="action" value="" hidden/><label
+                    for="loadSlot2">Slot 2</label></li>
+            <li title="Slot 3"><input onclick="loadGame(2);" id="loadSlot3" type="radio" name="action" value="" hidden/><label
+                    for="loadSlot3">Slot 3</label></li>
+        </ul>
+    </label>
+    <button id="hideText">Hide text</button>
+    <button id="muteVolume">Mute</button>
+    <button id="exitGame">Exit</button>
+</div>
+
+<script>
+
+    var volume = true;
+    novelEngine.setSourceLink('saya.json');
+    //novelEngine.setSourceLink('api.php');
+    novelEngine.setNovelName('saya');
+    novelEngine.drawFirstScreen();
+
+    $('#newGame').click(function() {
+        novelEngine.newGame();
+    });
+    $('#hideText').click(function() {
+        novelEngine.showHideText();
+    });
+    $('#muteVolume').click(function() {
+        if (volume) {
+            novelEngine.setVoiceVolume(0);
+            novelEngine.setMusicVolume(0);
+            novelEngine.stopMusic();
+            console.log('muted');
+        } else {
+            console.log('unmuted');
+            novelEngine.playMusic();
+            novelEngine.setVoiceVolume(0.5);
+            novelEngine.setMusicVolume(0.1);
+        }
+        volume = !volume;
+    });
+
+    $('#exitGame').click(function() {
+        novelEngine.destroyGame();
+        //shape.init();
+    });
+
+    //[{"history": 1,"text": "left", "key":"n1"},{"history": 2,"text": "right", "key":"n2"}]
+    //[{img: "sprite0056","pos": "center"}]
+
+    //sayaGame._autoPlay = true;
+
+    function next() {
+        novelEngine.next();
+    }
+    function saveGame(n) {
+        novelEngine.saveGame(n);
+    }
+    function loadGame(n) {
+        novelEngine.loadGame(n);
+    }
+
+</script>
+</body>
+</html>
