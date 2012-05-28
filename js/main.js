@@ -176,15 +176,26 @@ var novelEngine = ({
         if (this._stop || !this._actions || !this._actions[this._history][this._currentAction]) {
             return this;
         }
-
+        if (!novelEngine.timeout) {
+            novelEngine.timeout = true;
+            setTimeout(function() {
+                novelEngine.timeout = false;
+            }, 1000);
+        } else {
+            return this;
+        }
         clearInterval(this._drawTextInterval);
 
         if (this._actions[this._history][this._currentAction].bg && this._actions[this._history][this._currentAction].bg != this._currentBg) {
             this._currentBg = this._actions[this._history][this._currentAction].bg;
-            if (this._imageElements[this._currentBg].width) {
+            //console.log(this._imageElements[this._currentBg].width, this._currentBg);
+            if (this._imageElements[this._currentBg].loaded) {
                 this.drawBg();
             } else {
+                console.log('not loaded');
+                this._stop = true;
                 setTimeout(function() {
+                    novelEngine._stop = false;
                     novelEngine.next();
                 }, 1000);
                 return this;
@@ -375,12 +386,15 @@ var novelEngine = ({
     },
 
     addBgImage: function(alias) {
-        this._imageElements[alias] = new Image();
-        if (alias.search(/png/) != -1) {
-            this._imageElements[alias].src = this._imagePath + alias;
-        } else {
-            this._imageElements[alias].src = this._imagePath + alias;// + this._backgroundExt;
-        }
+        this._imageElements[alias] = document.createElement('img');
+        this._imageElements[alias].loaded = false;
+        /*this._imageElements[alias].onload = function () {
+            this.loaded = true;
+        };*/
+        this._imageElements[alias].addEventListener('load', function () {
+                    this.loaded = true;
+                });
+        this._imageElements[alias].src = this._imagePath + alias;
     },
 
     addSpriteImage: function(alias) {
@@ -395,6 +409,7 @@ var novelEngine = ({
     drawBg: function() {
         this.clearSprite();
         this._currentSprites = null;//@todo mojet peredelat na odin canvas
+        console.log(this._imageElements[this._currentBg]);
         this._bgCtx.drawImage(this._imageElements[this._currentBg], 0, 0);
     },
 
@@ -787,7 +802,10 @@ var novelEngine = ({
                     || novelEngine.getKey('aright')  == keycode
                     || novelEngine.getKey('adown') == keycode ) {
 
-                    novelEngine.next();
+
+                        novelEngine.next();
+
+
                 }
                 if (novelEngine.getKey('aleft') == keycode || novelEngine.getKey('aup')  == keycode) {
                     novelEngine.historyText();
