@@ -409,7 +409,6 @@ var novelEngine = ({
     drawBg: function() {
         this.clearSprite();
         this._currentSprites = null;//@todo mojet peredelat na odin canvas
-        console.log(this._imageElements[this._currentBg]);
         this._bgCtx.drawImage(this._imageElements[this._currentBg], 0, 0);
     },
 
