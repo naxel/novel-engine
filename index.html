@@ -11,9 +11,9 @@
 
 <div id="canvas" onclick="next();"></div>
 <div class="menu">
-    <button id="newGame">New</button>
+    <button class="push" id="newGame">New</button>
 
-    <button id="save">Save</button>
+    <button disabled id="save">Save</button>
     <label for="save">&#x25bc;
         <ul>
             <li title="Slot 1"><input onclick="saveGame(0);" id="saveSlot1" type="radio" name="action" value="" hidden
@@ -24,7 +24,7 @@
                     for="saveSlot3">Slot 3</label></li>
         </ul>
     </label>
-    <button id="load">Load</button>
+    <button disabled id="load">Load</button>
     <label for="load">&#x25bc;
         <ul>
             <li title="Slot 1"><input onclick="loadGame(0);" id="loadSlot1" type="radio" name="action" value="" hidden
@@ -35,14 +35,15 @@
                     for="loadSlot3">Slot 3</label></li>
         </ul>
     </label>
-    <button id="hideText">Hide text</button>
-    <button id="muteVolume">Mute</button>
-    <button id="exitGame">Exit</button>
+    <button class="push" id="hideText">Hide text</button>
+    <button class="push" id="muteVolume">Mute</button>
+    <button class="push" id="exitGame">Exit</button>
 </div>
 
 <script>
 
     var volume = true;
+    var visibleText = true;
     novelEngine.setSourceLink('saya.json');
     //novelEngine.setSourceLink('api.php');
     novelEngine.setNovelName('saya');
@@ -51,7 +52,14 @@
     $('#newGame').click(function() {
         novelEngine.newGame();
     });
+
     $('#hideText').click(function() {
+        if(visibleText){
+            $(this).addClass('pushed');
+        }else{
+            $(this).removeClass('pushed');
+        }
+        visibleText =! visibleText;
         novelEngine.showHideText();
     });
     $('#muteVolume').click(function() {
@@ -60,13 +68,15 @@
             novelEngine.setMusicVolume(0);
             novelEngine.stopMusic();
             console.log('muted');
+            $(this).addClass('pushed');
         } else {
             console.log('unmuted');
             novelEngine.playMusic();
             novelEngine.setVoiceVolume(0.5);
             novelEngine.setMusicVolume(0.1);
+            $(this).removeClass('pushed');
         }
-        volume = !volume;
+        volume =! volume;
     });
 
     $('#exitGame').click(function() {

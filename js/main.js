@@ -870,15 +870,16 @@ var novelEngine = ({
 
     },
     loadGame: function(slot) {
-        this.destroyGame();
+
         storage.storageName = this._novelName + '_game';
         var strg = storage.getStorageData();
-        //console.log(strg[slot]);
-        this._history = strg[slot].history;
-        this._currentAction = strg[slot].action;
+        if (strg[slot].action) {
+            this.destroyGame();
+            this._history = strg[slot].history;
+            this._currentAction = strg[slot].action;
 
-        this.start();
-
+            this.start();
+        }
     },
     newGame: function() {
         this.destroyGame();
